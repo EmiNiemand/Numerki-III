@@ -1,9 +1,10 @@
 import matplotlib.pyplot as mplot
 import numpy as np
 import newton_and_knots as nk
+from sklearn import metrics
 
 
-def draw_functions(lower_range: float, upper_range: float, function, a: [], c_x: []):
+def draw_functions(lower_range: float, upper_range: float, function, a: [], c_x: [], c_y: []):
     axes = mplot.figure().subplots()
     x = np.linspace(lower_range, upper_range, 100)
     y = []
@@ -12,9 +13,11 @@ def draw_functions(lower_range: float, upper_range: float, function, a: [], c_x:
         y.append(function(i))
         newton_y.append(nk.newton(a, c_x, i))
 
-    axes.plot(x, y, "r")
-    axes.plot(x, newton_y, "b")
-
+    axes.plot(x, y, "r", label="Original function")
+    axes.plot(x, newton_y, "b", label="Interpolated function")
+    axes.plot(c_x, c_y, ".", "g")
+    r2 = round(100 * metrics.r2_score(y, newton_y), 3)
+    mplot.title("Dokładność interpolacji: " + str(r2))
     axes.set_xlabel('X')
     axes.set_ylabel('Y')
 
